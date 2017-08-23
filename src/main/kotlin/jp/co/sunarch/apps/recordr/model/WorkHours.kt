@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 
-data class WorkHours(val minutes: Long = 0) : Comparable<WorkHours> {
+data class WorkHours(val minutes: Int = 0) : Comparable<WorkHours> {
 
   operator fun plus(other: WorkHours): WorkHours {
     return WorkHours(minutes + other.minutes)
@@ -14,17 +14,17 @@ data class WorkHours(val minutes: Long = 0) : Comparable<WorkHours> {
     return WorkHours(minutes - other.minutes)
   }
 
-  operator fun times(times: Long): WorkHours {
+  operator fun times(times: Int): WorkHours {
     return WorkHours(minutes * times)
   }
 
-  operator fun div(div: Long): WorkHours {
+  operator fun div(div: Int): WorkHours {
     return WorkHours(minutes / div)
   }
 
   override fun toString(): String {
-    val hours = BigDecimal.valueOf(this.minutes / MINUTES_IN_HOUR)
-    val minutes = BigDecimal.valueOf(this.minutes % MINUTES_IN_HOUR)
+    val hours = BigDecimal.valueOf(this.minutes.toLong() / MINUTES_IN_HOUR)
+    val minutes = BigDecimal.valueOf(this.minutes.toLong() % MINUTES_IN_HOUR)
         .divide(MINUTES_IN_HOUR_DECIMAL, 2, RoundingMode.HALF_UP)
 
     val format = NumberFormat.getInstance()
@@ -34,7 +34,7 @@ data class WorkHours(val minutes: Long = 0) : Comparable<WorkHours> {
   }
 
   override fun compareTo(other: WorkHours): Int {
-    return java.lang.Long.compare(minutes, other.minutes)
+    return java.lang.Integer.compare(minutes, other.minutes)
   }
 
   companion object {
@@ -44,15 +44,15 @@ data class WorkHours(val minutes: Long = 0) : Comparable<WorkHours> {
     val ZERO = WorkHours.ofMinutes(0)
 
     fun of(hours: Int, minutes: Int): WorkHours {
-      return WorkHours(hours.toLong() * MINUTES_IN_HOUR + minutes)
+      return WorkHours(hours * MINUTES_IN_HOUR + minutes)
     }
 
     fun ofHours(hours: Int): WorkHours {
-      return WorkHours(hours.toLong() * MINUTES_IN_HOUR)
+      return WorkHours(hours * MINUTES_IN_HOUR)
     }
 
     fun ofMinutes(minutes: Int): WorkHours {
-      return WorkHours(minutes.toLong())
+      return WorkHours(minutes)
     }
 
     fun between(start: WorkTime, end: WorkTime): WorkHours {
@@ -60,7 +60,7 @@ data class WorkHours(val minutes: Long = 0) : Comparable<WorkHours> {
 
       val duration = start.durationTo(end)
       val minutes = duration.toMinutes()
-      return WorkHours(minutes)
+      return WorkHours(minutes.toInt())
     }
   }
 

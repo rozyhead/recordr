@@ -1,6 +1,7 @@
 package jp.co.sunarch.apps.recordr.model
 
 import java.time.Duration
+import java.time.LocalTime
 import java.util.Comparator.*
 
 data class WorkTime(val hour: Int, val minute: Int) : Comparable<WorkTime> {
@@ -24,6 +25,11 @@ data class WorkTime(val hour: Int, val minute: Int) : Comparable<WorkTime> {
       require(hour >= 0, { "The hour must be >= 0" })
       require(minute >= 0, { "The minute must be >= 0" })
       return WorkTime(hour + minute / 60, minute % 60)
+    }
+
+    fun parse(text: String): WorkTime {
+      val time = LocalTime.parse(text)
+      return WorkTime(time.hour, time.minute)
     }
 
     val comparator: Comparator<WorkTime> = comparing(WorkTime::hour)
