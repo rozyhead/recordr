@@ -17,9 +17,6 @@ class RecordrApplication {
   @Bean
   fun javaTimeModule() = JavaTimeModule()
 
-  @Bean
-  fun transactionManager(dataSource: DataSource) = SpringTransactionManager(dataSource)
-
 }
 
 fun main(args: Array<String>) {

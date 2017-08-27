@@ -1,10 +1,13 @@
 package jp.co.sunarch.apps.recordr.model
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 
 class WorkHoursTest {
+
+  private val objectMapper = ObjectMapper()
 
   @Test
   fun test_toString_0000() {
@@ -28,6 +31,19 @@ class WorkHoursTest {
   fun test_toString_0116() {
     val hours = WorkHours.of(1, 16)
     assertThat(hours.toString()).isEqualTo("1.27")
+  }
+
+  @Test
+  fun test_toJson() {
+    val hours = WorkHours.ofMinutes(450)
+    assertThat(objectMapper.writeValueAsString(hours))
+        .isEqualTo("7.50")
+  }
+
+  @Test
+  fun test_fromJson() {
+    assertThat(objectMapper.readValue("7.5", WorkHours::class.java))
+        .isEqualTo(WorkHours.ofMinutes(450))
   }
 
   @Test

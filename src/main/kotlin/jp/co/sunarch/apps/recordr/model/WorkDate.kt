@@ -28,16 +28,16 @@ data class WorkDate(private val value: LocalDate) {
     fun parse(text: CharSequence): WorkDate = WorkDate(LocalDate.parse(text, FORMATTER))
   }
 
-  object JsonSerializer : StdSerializer<WorkDate>(WorkDate::class.java) {
+  class JsonSerializer : StdSerializer<WorkDate>(WorkDate::class.java) {
     override fun serialize(value: WorkDate, gen: JsonGenerator, provider: SerializerProvider) {
       value.let { gen.writeString(it.toString()) }
     }
   }
 
-  object JsonDeserializer : StdDeserializer<WorkDate>(WorkDate::class.java) {
+  class JsonDeserializer : StdDeserializer<WorkDate>(WorkDate::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): WorkDate {
       return p.readValueAs(String::class.java)
-          .let { WorkDate(LocalDate.parse(it, FORMATTER)) }
+          .let { WorkDate.parse(it) }
     }
   }
 

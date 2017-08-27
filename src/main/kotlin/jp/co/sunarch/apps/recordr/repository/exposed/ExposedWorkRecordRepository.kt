@@ -4,7 +4,6 @@ import jp.co.sunarch.apps.recordr.model.*
 import jp.co.sunarch.apps.recordr.repository.WorkRecordRepository
 import org.jetbrains.exposed.sql.*
 import org.springframework.stereotype.Repository
-
 import jp.co.sunarch.apps.recordr.repository.exposed.WorkRecordTable as T
 
 @Repository
