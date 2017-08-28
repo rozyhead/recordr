@@ -17,4 +17,7 @@ class ExposedConfigutation {
   @Bean
   fun transactionManager(dataSource: DataSource) = SpringTransactionManager(dataSource)
 
+  @Bean
+  fun exposedWorkRecordRepository() = ExposedWorkRecordRepository()
+
 }

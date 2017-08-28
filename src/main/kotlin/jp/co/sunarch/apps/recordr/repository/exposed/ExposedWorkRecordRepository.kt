@@ -3,10 +3,8 @@ package jp.co.sunarch.apps.recordr.repository.exposed
 import jp.co.sunarch.apps.recordr.model.*
 import jp.co.sunarch.apps.recordr.repository.WorkRecordRepository
 import org.jetbrains.exposed.sql.*
-import org.springframework.stereotype.Repository
 import jp.co.sunarch.apps.recordr.repository.exposed.WorkRecordTable as T
 
-@Repository
 class ExposedWorkRecordRepository : WorkRecordRepository {
 
   override fun findByUserIdAndDate(userId: UserId, date: WorkDate): WorkRecord? {
