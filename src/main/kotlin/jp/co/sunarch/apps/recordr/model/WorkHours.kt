@@ -1,19 +1,17 @@
 package jp.co.sunarch.apps.recordr.model
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import com.fasterxml.jackson.databind.util.StdConverter
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 
-@JsonSerialize(using = WorkHours.JsonSerializer::class)
-@JsonDeserialize(using = WorkHours.JsonDeserializer::class)
+private val MINUTES_IN_HOUR = 60
+private val MINUTES_IN_HOUR_DECIMAL = BigDecimal.valueOf(MINUTES_IN_HOUR.toLong())
+
+@JsonSerialize(converter = WorkHoursToBigDecimalConverter::class)
+@JsonDeserialize(converter = BigDecimalToWorkHoursConverter::class)
 data class WorkHours(val minutes: Int = 0) : Comparable<WorkHours> {
 
   operator fun plus(other: WorkHours): WorkHours {
@@ -48,9 +46,6 @@ data class WorkHours(val minutes: Int = 0) : Comparable<WorkHours> {
   }
 
   companion object {
-    private val MINUTES_IN_HOUR = 60
-    private val MINUTES_IN_HOUR_DECIMAL = BigDecimal.valueOf(MINUTES_IN_HOUR.toLong())
-
     val ZERO = WorkHours.ofMinutes(0)
 
     fun of(hours: Int, minutes: Int): WorkHours {
@@ -73,18 +68,16 @@ data class WorkHours(val minutes: Int = 0) : Comparable<WorkHours> {
       return WorkHours(minutes.toInt())
     }
   }
+}
 
-  class JsonSerializer : StdSerializer<WorkHours>(WorkHours::class.java) {
-    override fun serialize(value: WorkHours, gen: JsonGenerator, provider: SerializerProvider) {
-      value.let { gen.writeNumber(BigDecimal(it.minutes).divide(MINUTES_IN_HOUR_DECIMAL, 2, RoundingMode.HALF_UP)) }
-    }
-  }
-
-  class JsonDeserializer : StdDeserializer<WorkHours>(WorkHours::class.java) {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): WorkHours {
-      return p.readValueAs(BigDecimal::class.java)
-          .let { WorkHours((it * MINUTES_IN_HOUR_DECIMAL).toInt()) }
-    }
+private class WorkHoursToBigDecimalConverter : StdConverter<WorkHours, BigDecimal>() {
+  override fun convert(value: WorkHours): BigDecimal {
+    return BigDecimal(value.minutes).divide(MINUTES_IN_HOUR_DECIMAL, 2, RoundingMode.HALF_UP)
   }
 }
 
+private class BigDecimalToWorkHoursConverter : StdConverter<BigDecimal, WorkHours>() {
+  override fun convert(value: BigDecimal): WorkHours {
+    return WorkHours((value * MINUTES_IN_HOUR_DECIMAL).toInt())
+  }
+}

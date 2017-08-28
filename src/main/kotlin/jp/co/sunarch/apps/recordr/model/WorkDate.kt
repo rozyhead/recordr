@@ -1,19 +1,13 @@
 package jp.co.sunarch.apps.recordr.model
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import com.fasterxml.jackson.databind.util.StdConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
-@JsonSerialize(using = WorkDate.JsonSerializer::class)
-@JsonDeserialize(using = WorkDate.JsonDeserializer::class)
+@JsonSerialize(converter = WorkDateToStringConverter::class)
+@JsonDeserialize(converter = StringToWorkDateConverter::class)
 data class WorkDate(private val value: LocalDate) {
 
   override fun toString(): String {
@@ -28,17 +22,12 @@ data class WorkDate(private val value: LocalDate) {
     fun parse(text: CharSequence): WorkDate = WorkDate(LocalDate.parse(text, FORMATTER))
   }
 
-  class JsonSerializer : StdSerializer<WorkDate>(WorkDate::class.java) {
-    override fun serialize(value: WorkDate, gen: JsonGenerator, provider: SerializerProvider) {
-      value.let { gen.writeString(it.toString()) }
-    }
-  }
+}
 
-  class JsonDeserializer : StdDeserializer<WorkDate>(WorkDate::class.java) {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): WorkDate {
-      return p.readValueAs(String::class.java)
-          .let { WorkDate.parse(it) }
-    }
-  }
+private class WorkDateToStringConverter : StdConverter<WorkDate, String>() {
+  override fun convert(value: WorkDate): String = value.toString()
+}
 
+private class StringToWorkDateConverter : StdConverter<String, WorkDate>() {
+  override fun convert(value: String): WorkDate = WorkDate.parse(value)
 }

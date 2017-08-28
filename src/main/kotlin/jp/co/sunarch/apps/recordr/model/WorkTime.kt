@@ -1,19 +1,14 @@
 package jp.co.sunarch.apps.recordr.model
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import com.fasterxml.jackson.databind.util.StdConverter
 import java.time.Duration
 import java.time.LocalTime
-import java.util.Comparator.*
+import java.util.Comparator.comparing
 
-@JsonSerialize(using = WorkTime.JsonSerializer::class)
-@JsonDeserialize(using = WorkTime.JsonDeserializer::class)
+@JsonSerialize(converter = WorkTimeToStringConverter::class)
+@JsonDeserialize(converter = StringToWorkTimeConverter::class)
 data class WorkTime(val hour: Int, val minute: Int) : Comparable<WorkTime> {
 
   fun durationTo(other: WorkTime): Duration {
@@ -46,18 +41,12 @@ data class WorkTime(val hour: Int, val minute: Int) : Comparable<WorkTime> {
         .thenComparing(comparing(WorkTime::minute))
 
   }
+}
 
-  class JsonSerializer : StdSerializer<WorkTime>(WorkTime::class.java) {
-    override fun serialize(value: WorkTime, gen: JsonGenerator, provider: SerializerProvider) {
-      value.let { gen.writeString(it.toString()) }
-    }
-  }
+private class WorkTimeToStringConverter : StdConverter<WorkTime, String>() {
+  override fun convert(value: WorkTime): String = value.toString()
+}
 
-  class JsonDeserializer : StdDeserializer<WorkTime>(WorkTime::class.java) {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): WorkTime {
-      return p.readValueAs(String::class.java)
-          .let { WorkTime.parse(it) }
-    }
-  }
-
+private class StringToWorkTimeConverter : StdConverter<String, WorkTime>() {
+  override fun convert(value: String): WorkTime = WorkTime.parse(value)
 }
