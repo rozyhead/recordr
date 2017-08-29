@@ -49,22 +49,22 @@ class WorkRecordController(
   @PostMapping("/api/v1/me/records/{date}")
   @PutMapping("/api/v1/me/records/{date}")
   fun save(
-      @PathVariable("date") date: WorkDate,
+      @PathVariable("date") date: String,
       @RequestBody json: SaveJson,
       principal: Principal
   ) {
     val userId = UserId(principal.name)
-    val record = json.toRecord(userId, date)
+    val record = json.toRecord(userId, WorkDate.parse(date))
     workRecordService.save(record)
   }
 
   @DeleteMapping("/api/v1/me/records/{date}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   fun deleteByDate(
-      @PathVariable("date") date: WorkDate,
+      @PathVariable("date") date: String,
       principal: Principal
   ) {
     val userId = UserId(principal.name)
-    workRecordService.deleteByDate(userId, date)
+    workRecordService.deleteByDate(userId, WorkDate.parse(date))
   }
 }
