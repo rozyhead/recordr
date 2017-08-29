@@ -18,7 +18,7 @@ class ExposedWorkRecordRepository : WorkRecordRepository {
     return T.select {
       T.userId.eq(userId.value) and
           T.date.like(String.format("%04d-%02d", year, month) + "%")
-    }.toList().map(::mapToWorkRecord)
+    }.orderBy(T.date).toList().map(::mapToWorkRecord)
   }
 
   override fun save(record: WorkRecord) {
