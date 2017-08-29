@@ -26,20 +26,20 @@ class ExposedWorkRecordRepository : WorkRecordRepository {
       T.insert {
         it[T.userId] = record.userId.value
         it[T.date] = record.date.toString()
-        it[T.startTime] = record.startTime.toString()
-        it[T.endTime] = record.endTime.toString()
+        it[T.startTime] = record.startTime?.toString()
+        it[T.endTime] = record.endTime?.toString()
         it[T.restMinutes] = record.restHours?.minutes
-        it[T.notes] = record.userId.value
+        it[T.notes] = record.notes
       }
     } else {
       T.update({
         T.userId.eq(record.userId.value) and
             T.date.eq(record.date.toString())
       }) {
-        it[T.startTime] = record.startTime.toString()
-        it[T.endTime] = record.endTime.toString()
+        it[T.startTime] = record.startTime?.toString()
+        it[T.endTime] = record.endTime?.toString()
         it[T.restMinutes] = record.restHours?.minutes
-        it[T.notes] = record.userId.value
+        it[T.notes] = record.notes
       }
     }
   }

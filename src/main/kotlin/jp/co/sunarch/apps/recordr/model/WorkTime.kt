@@ -7,6 +7,8 @@ import java.time.Duration
 import java.time.LocalTime
 import java.util.Comparator.comparing
 
+private val TEXT_REGEX = """(?<hour>\d+):(?<minute>\d)+""".toRegex()
+
 @JsonSerialize(converter = WorkTimeToStringConverter::class)
 @JsonDeserialize(converter = StringToWorkTimeConverter::class)
 data class WorkTime(val hour: Int, val minute: Int) : Comparable<WorkTime> {
@@ -33,8 +35,10 @@ data class WorkTime(val hour: Int, val minute: Int) : Comparable<WorkTime> {
     }
 
     fun parse(text: String): WorkTime {
-      val time = LocalTime.parse(text)
-      return WorkTime(time.hour, time.minute)
+      val result = TEXT_REGEX.find(text)?: throw IllegalArgumentException()
+      val hour = result.groups["hour"]!!.value.toInt()
+      val minute = result.groups["minute"]!!.value.toInt()
+      return WorkTime(hour, minute)
     }
 
     val comparator: Comparator<WorkTime> = comparing(WorkTime::hour)

@@ -2,7 +2,6 @@ package jp.co.sunarch.apps.recordr.controller
 
 import jp.co.sunarch.apps.recordr.model.*
 import jp.co.sunarch.apps.recordr.service.WorkRecordService
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
 
@@ -44,6 +43,7 @@ class WorkRecordController(
   ): WorkRecord? {
     val userId = UserId(principal.name)
     return workRecordService.findByDate(userId, WorkDate.parse(date))
+        ?: throw ResourceNotFoundException("The record for date '$date' is not found")
   }
 
   @PostMapping("/api/v1/me/records/{date}")
@@ -52,14 +52,14 @@ class WorkRecordController(
       @PathVariable("date") date: String,
       @RequestBody json: SaveJson,
       principal: Principal
-  ) {
+  ): WorkRecord {
     val userId = UserId(principal.name)
     val record = json.toRecord(userId, WorkDate.parse(date))
     workRecordService.save(record)
+    return findByDate(date, principal)!!
   }
 
   @DeleteMapping("/api/v1/me/records/{date}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
   fun deleteByDate(
       @PathVariable("date") date: String,
       principal: Principal
