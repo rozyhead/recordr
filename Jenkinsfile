@@ -13,7 +13,7 @@ node('node') {
 
   stage('Test') {
     sh './gradlew test'
-    junit 'build/test-results/**/*.xml'
+    junit 'build/reports/**/*.xml'
   }
 
   stage('Packaging') {
