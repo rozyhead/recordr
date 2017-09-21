@@ -20,5 +20,5 @@ build:
   after-steps:
     - slack-notifier:
         url: $SLACK_URL
-        channel: dev_memo
+        channel: notifications
         usename: werckerbot
