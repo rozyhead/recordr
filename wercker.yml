@@ -22,4 +22,3 @@ build:
         url: $SLACK_URL
         channel: dev_memo
         usename: werckerbot
-        notify_on: failed
