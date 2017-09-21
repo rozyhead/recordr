@@ -17,3 +17,9 @@ build:
         name: packaging
         code: |
           ./gradlew --project-cache-dir=$WERCKER_CACHE_DIR --gradle-user-home=$WERCKER_CACHE_DIR/.gradle build
+  after-steps:
+    - slack-notifier:
+        url: $SLACK_URL
+        channel: dev_memo
+        usename: werckerbot
+        notify_on: failed
