@@ -13,7 +13,7 @@ node('node') {
 
   stage('Test') {
     sh './gradlew test'
-    junit 'build/reports/**/*.xml'
+    junit 'build/test-results/**/*.xml'
   }
 
   stage('Packaging') {
@@ -21,6 +21,6 @@ node('node') {
   }
 
   stage('Archive') {
-    archiveArtifacts artifacts: 'build/libs/*.jar'
+    archiveArtifacts artifacts: 'build/libs/**/*.jar'
   }
 }
