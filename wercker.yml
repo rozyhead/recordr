@@ -1,0 +1,19 @@
+box: openjdk:8u141-jdk
+build:
+  steps:
+    - script:
+        name: compile
+        code: |
+          ./gradlew --project-cache-dir=$WERCKER_CACHE_DIR --gradle-user-home=$WERCKER_CACHE_DIR/.gradle classes
+    - script:
+        name: test compile
+        code: |
+          ./gradlew --project-cache-dir=$WERCKER_CACHE_DIR --gradle-user-home=$WERCKER_CACHE_DIR/.gradle testClasses
+    - script:
+        name: test
+        code: |
+          ./gradlew --project-cache-dir=$WERCKER_CACHE_DIR --gradle-user-home=$WERCKER_CACHE_DIR/.gradle test --info
+    - script:
+        name: packaging
+        code: |
+          ./gradlew --project-cache-dir=$WERCKER_CACHE_DIR --gradle-user-home=$WERCKER_CACHE_DIR/.gradle build
