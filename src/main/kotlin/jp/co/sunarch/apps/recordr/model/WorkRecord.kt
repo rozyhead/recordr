@@ -1,6 +1,6 @@
 package jp.co.sunarch.apps.recordr.model
 
-class WorkRecord(
+data class WorkRecord(
     val userId: UserId,
     val date: WorkDate,
     val startTime: WorkTime?,

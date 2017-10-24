@@ -46,8 +46,10 @@ class WorkRecordController(
         ?: throw ResourceNotFoundException("The record for date '$date' is not found")
   }
 
-  @PostMapping("/api/v1/me/records/{date}")
-  @PutMapping("/api/v1/me/records/{date}")
+  @RequestMapping(
+      path = arrayOf("/api/v1/me/records/{date}"),
+      method = arrayOf(RequestMethod.POST, RequestMethod.PUT)
+  )
   fun save(
       @PathVariable("date") date: String,
       @RequestBody json: SaveJson,
