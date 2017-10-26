@@ -273,5 +273,5 @@ class WorkRecordControllerTest {
             .accept(MediaType.APPLICATION_JSON)
     ).andExpect(status().isUnauthorized)
   }
-  
+
 }

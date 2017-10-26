@@ -137,4 +137,16 @@ class WorkTimeTest {
     val time = WorkTime.of(9, 30)
     assertThat(time.durationTo(WorkTime.of(10, 0))).isEqualTo(Duration.ofMinutes(30))
   }
+
+  @Test
+  fun test_parse_1000() {
+    val time = WorkTime.parse("10:00")
+    assertThat(time).isEqualTo(WorkTime.of(10, 0))
+  }
+
+  @Test
+  fun test_parse_1030() {
+    val time = WorkTime.parse("10:30")
+    assertThat(time).isEqualTo(WorkTime.of(10, 30))
+  }
 }

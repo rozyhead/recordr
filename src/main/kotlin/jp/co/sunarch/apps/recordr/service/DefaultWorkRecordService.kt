@@ -1,4 +1,4 @@
-package jp.co.sunarch.apps.recordr.service.impl
+package jp.co.sunarch.apps.recordr.service
 
 import jp.co.sunarch.apps.recordr.model.UserId
 import jp.co.sunarch.apps.recordr.model.WorkDate

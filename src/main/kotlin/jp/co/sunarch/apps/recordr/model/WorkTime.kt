@@ -7,7 +7,7 @@ import java.time.Duration
 import java.time.LocalTime
 import java.util.Comparator.comparing
 
-private val TEXT_REGEX = """(?<hour>\d+):(?<minute>\d)+""".toRegex()
+private val TEXT_REGEX = """(?<hour>\d+):(?<minute>\d+)""".toRegex()
 
 @JsonSerialize(converter = WorkTimeToStringConverter::class)
 @JsonDeserialize(converter = StringToWorkTimeConverter::class)
